@@ -1,8 +1,7 @@
 ﻿{% extends "app/layout.html" %}
 {% block content %}
 
-<h2>{{ title }}.</h2>
-<h3>{{ message }}</h3>
+<h1>{{ title }}</h1>
 
 <h3>Pregunta: {{ question.question_text }}</h3>
 {% if error_message %}<p><strong style="color:red;"><b>{{ error_message }}</b></strong></p>{% endif %}

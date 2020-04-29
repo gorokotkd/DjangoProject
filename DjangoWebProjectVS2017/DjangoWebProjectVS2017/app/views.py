@@ -37,7 +37,7 @@ def contact(request):
         {
             'title':'Autor de la web',
             'message':'Datos de contacto',
-            'year':datetime.now().year,
+            'year':datetime.now().year
         }
     )
 
@@ -50,7 +50,7 @@ def about(request):
         {
             'title':'About',
             'message':'Your application description page.',
-            'year':datetime.now().year,
+            'year':datetime.now().year
         }
     )
 def index(request):
@@ -58,17 +58,19 @@ def index(request):
     template = loader.get_template('polls/index.html')
     context = {
                 'title':'Lista de preguntas de la encuesta',
+                'message' : 'Mensaje que no se que poner',
+                'year' : datetime.now().year,
                 'latest_question_list': latest_question_list,
               }
     return render(request, 'polls/index.html', context)
 
 def detail(request, question_id):
      question = get_object_or_404(Question, pk=question_id)
-     return render(request, 'polls/detail.html', {'title':'Respuestas asociadas a la pregunta:','question': question})
+     return render(request, 'polls/detail.html', {'title':'Respuestas asociadas a la pregunta:','question': question, 'year' : datetime.now().year})
 
 def results(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'polls/results.html', {'title':'Resultados de la pregunta:','question': question})
+    return render(request, 'polls/results.html', {'title':'Resultados de la pregunta:','question': question, 'year':datetime.now().year})
 
 def vote(request, question_id):
     p = get_object_or_404(Question, pk=question_id)
@@ -77,8 +79,10 @@ def vote(request, question_id):
     except (KeyError, Choice.DoesNotExist):
         # Vuelve a mostrar el form.
         return render(request, 'polls/detail.html', {
+            'title' : 'pagina de votacion',
             'question': p,
             'error_message': "ERROR: No se ha seleccionado una opcion",
+            'year':datetime.now().year
         })
     else:
         selected_choice.votes += 1
@@ -99,7 +103,11 @@ def question_new(request):
                 #return render(request, 'polls/index.html', {'title':'Respuestas posibles','question': question})
         else:
             form = QuestionForm()
-        return render(request, 'polls/question_new.html', {'form': form})
+        return render(request, 'polls/question_new.html', {
+                                                            'form': form,
+                                                            'title' : 'Pagina para añadir un apregunta',
+                                                            'message' : 'Pregunta lo que sea.',
+                                                            'year' : datetime.now().year})
 
 def choice_add(request, question_id):
         question = Question.objects.get(id = question_id)
@@ -114,7 +122,7 @@ def choice_add(request, question_id):
         else: 
             form = ChoiceForm()
         #return render_to_response ('choice_new.html', {'form': form, 'poll_id': poll_id,}, context_instance = RequestContext(request),)
-        return render(request, 'polls/choice_new.html', {'title':'Pregunta:'+ question.question_text,'form': form})
+        return render(request, 'polls/choice_new.html', {'title':'Pregunta:'+ question.question_text,'form': form , 'year' : datetime.now().year})
 
 def chart(request, question_id):
     q=Question.objects.get(id = question_id)
@@ -122,11 +130,13 @@ def chart(request, question_id):
     dates = [obj.choice_text for obj in qs]
     counts = [obj.votes for obj in qs]
     context = {
+        'title' : 'grafico de resultados',
         'dates': json.dumps(dates),
         'counts': json.dumps(counts),
+        'year':datetime.now().year
     }
 
-    return render(request, 'polls/grafico.html', context)
+    return render(request, 'polls/grafico.html', context,)
 
 def user_new(request):
         if request.method == "POST":
@@ -138,7 +148,7 @@ def user_new(request):
                 #return render(request, 'polls/index.html', {'title':'Respuestas posibles','question': question})
         else:
             form = UserForm()
-        return render(request, 'polls/user_new.html', {'form': form})
+        return render(request, 'polls/user_new.html', {'title' : 'Registro de usuario','form': form, 'year':datetime.now().year})
 
 def users_detail(request):
     latest_user_list = User.objects.order_by('email')
@@ -146,5 +156,6 @@ def users_detail(request):
     context = {
                 'title':'Lista de usuarios',
                 'latest_user_list': latest_user_list,
+                'year':datetime.now().year
               }
     return render(request, 'polls/users.html', context)

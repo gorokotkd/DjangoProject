@@ -5,6 +5,7 @@
     <Name>DjangoWebProjectVS2017</Name>
     <RootNamespace>DjangoWebProjectVS2017</RootNamespace>
     <InterpreterId>MSBuild|env1|$(MSBuildProjectFullPath)</InterpreterId>
+    <TestFramework>Pytest</TestFramework>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
