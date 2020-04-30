@@ -2,7 +2,20 @@
 {% block content %}
 
 <h2>{{ title }}.</h2>
-<h3>{{ message }}</h3>
+{% if question_topic_list %}
+<form  method="post" class="post-form"> {% csrf_token %}
+    <select class="form-control" name="topicSelect">
+    {%for topic in question_topic_list %}
+        <option value="{{topic.topic}}">{{topic.topic}}</option>
+    {% endfor %}
+    </select>
+    <br />
+    <input type="submit" value="Filtrar por tema" class="btn btn-default"/>
+</form>
+<br />
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
 
 {% if latest_question_list %}
     <ul>

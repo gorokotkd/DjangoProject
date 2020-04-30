@@ -54,13 +54,19 @@ def about(request):
         }
     )
 def index(request):
-    latest_question_list = Question.objects.order_by('-pub_date')
+    if request.method == "POST":
+        form = request.POST
+        latest_question_list = Question.objects.filter(topic=form.get("topicSelect", "")).order_by('-pub_date')
+    else:
+        latest_question_list = Question.objects.order_by('-pub_date')
+        
+    question_topic_list = list(Question.objects.values('topic').distinct())
     template = loader.get_template('polls/index.html')
     context = {
                 'title':'Lista de preguntas de la encuesta',
-                'message' : 'Mensaje que no se que poner',
                 'year' : datetime.now().year,
                 'latest_question_list': latest_question_list,
+                'question_topic_list' : question_topic_list,
               }
     return render(request, 'polls/index.html', context)
 

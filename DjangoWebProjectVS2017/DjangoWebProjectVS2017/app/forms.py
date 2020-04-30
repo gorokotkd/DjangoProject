@@ -35,3 +35,6 @@ class BootstrapAuthenticationForm(AuthenticationForm):
                                widget=forms.PasswordInput({
                                    'class': 'form-control',
                                    'placeholder':'Password'}))
+
+class FilterForm(forms.ModelForm):
+    topic = forms.CharField(max_length=254)
