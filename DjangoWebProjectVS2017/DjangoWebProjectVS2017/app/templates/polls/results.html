@@ -1,13 +1,22 @@
 ﻿{% extends "app/layout.html" %}
 {% block content %}
 
-<h1>{{ question.question_text }}</h1>
+<h1>{{ title }}</h1>
+<h2>{{ question.question_text }}</h2>
 
-<ul>
-{% for choice in question.choice_set.all %}
-    <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
-{% endfor %}
-</ul>
+{% if request.user.is_authenticated %}
+    <ul>
+    {% for choice in question.choice_set.all %}
+        <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    {% if choice.correct %}
+        <h3 style="color: green">Respuesta Correcta !</h3>
+    {% else %}
+         <h3 style="color: red">Respuesta Incorrecta !</h3>
+    {% endif %}
+{% endif %}
 
 <a href="{% url 'chart' question.id %}"> Ver grafica</a><br />
 <a href="{% url 'index' %}">Contestar otra pregunta?</a>

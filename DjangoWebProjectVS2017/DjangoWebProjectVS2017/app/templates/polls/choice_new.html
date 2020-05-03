@@ -3,10 +3,15 @@
 
 
 <h1>Insertar una opción</h1>
+    {% if question.choice_set.count == 4 %}
+        <h3 style="color: red">Ya se ha insertado el máximo de opciones (4).</h3>
+    {% else %}
         <form method="POST" class="post-form">{% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="save btn btn-default">Save</button>
         </form>
+    {% endif %}
+        
 <a href="{% url 'index' %}">Ver preguntas</a> 
 
 {% endblock %}

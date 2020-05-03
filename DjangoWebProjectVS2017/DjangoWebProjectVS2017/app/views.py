@@ -74,9 +74,10 @@ def detail(request, question_id):
      question = get_object_or_404(Question, pk=question_id)
      return render(request, 'polls/detail.html', {'title':'Respuestas asociadas a la pregunta:','question': question, 'year' : datetime.now().year})
 
-def results(request, question_id):
+def results(request, question_id, choice_id):
     question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'polls/results.html', {'title':'Resultados de la pregunta:','question': question, 'year':datetime.now().year})
+    choice = get_object_or_404(Choice, pk=choice_id)
+    return render(request, 'polls/results.html', {'title':'Resultados de la pregunta:','question': question, 'year':datetime.now().year, 'choice' : choice})
 
 def vote(request, question_id):
     p = get_object_or_404(Question, pk=question_id)
@@ -96,7 +97,7 @@ def vote(request, question_id):
         # Siempre devolver un HttpResponseRedirect despues de procesar
         # exitosamente el POST de un form. Esto evita que los datos se
         # puedan postear dos veces si el usuario vuelve atras en su browser.
-        return HttpResponseRedirect(reverse('results', args=(p.id,)))
+        return HttpResponseRedirect(reverse('results', args=(p.id, selected_choice.id,)))
 
 def question_new(request):
         if request.method == "POST":
@@ -116,7 +117,7 @@ def question_new(request):
                                                             'year' : datetime.now().year})
 
 def choice_add(request, question_id):
-        question = Question.objects.get(id = question_id)
+        question = Question.objects.get(pk = question_id)
         if request.method =='POST':
             form = ChoiceForm(request.POST)
             if form.is_valid():
@@ -128,7 +129,7 @@ def choice_add(request, question_id):
         else: 
             form = ChoiceForm()
         #return render_to_response ('choice_new.html', {'form': form, 'poll_id': poll_id,}, context_instance = RequestContext(request),)
-        return render(request, 'polls/choice_new.html', {'title':'Pregunta:'+ question.question_text,'form': form , 'year' : datetime.now().year})
+        return render(request, 'polls/choice_new.html', {'title':'Pregunta:'+ question.question_text,'form': form , 'year' : datetime.now().year, 'question' : question})
 
 def chart(request, question_id):
     q=Question.objects.get(id = question_id)

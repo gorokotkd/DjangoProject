@@ -9,14 +9,18 @@
 {% csrf_token %}
 {% for choice in question.choice_set.all %}
     <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
-    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
+    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
+    {% if request.user.is_authenticated and choice.correct %}
+        <label for="choice" style="color: green"> // Correcta.</label>
+    {% endif %}
+    <br />
 {% endfor %}
 {% if request.user.is_authenticated %}
     <a href="{% url 'choice_add' question.id %}"><h3>Insertar Opciones</h3></a> 
     <a href="{% url 'chart' question.id %}"> <h3>Ver resultado de la votacion</h3> </a><br />
 {% else %}
-    <input type="submit" value="Vote" />
+    <input type="submit" value="Vote" /><br />
 {% endif %}
-
+    <a href="{% url 'index' %}">Seleccionar otra pregunta.</a>
 </form>
 {% endblock %}
