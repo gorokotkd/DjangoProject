@@ -5,6 +5,7 @@ Definition of views.
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpRequest
 from django.template import RequestContext
+from django.template.loader import render_to_string
 from datetime import datetime
 from django.http.response import HttpResponse, Http404
 from django.http import HttpResponseRedirect, HttpResponse
@@ -13,6 +14,7 @@ from django.template import loader
 from django.core.urlresolvers import reverse
 from app.forms import QuestionForm, ChoiceForm,UserForm
 from django.shortcuts import redirect
+from django.http import JsonResponse
 import json
 
 
@@ -77,7 +79,9 @@ def detail(request, question_id):
 def results(request, question_id, choice_id):
     question = get_object_or_404(Question, pk=question_id)
     choice = get_object_or_404(Choice, pk=choice_id)
-    return render(request, 'polls/results.html', {'title':'Resultados de la pregunta:','question': question, 'year':datetime.now().year, 'choice' : choice})
+    #return render(request, 'polls/results.html', {'title':'Resultados de la pregunta:','question': question, 'year':datetime.now().year, 'choice' : choice})
+    html = render_to_string('polls/results.html', {'title':'Resultados de la pregunta:','question': question, 'year':datetime.now().year, 'choice' : choice})
+    return HttpResponse(html)
 
 def vote(request, question_id):
     p = get_object_or_404(Question, pk=question_id)
@@ -97,7 +101,18 @@ def vote(request, question_id):
         # Siempre devolver un HttpResponseRedirect despues de procesar
         # exitosamente el POST de un form. Esto evita que los datos se
         # puedan postear dos veces si el usuario vuelve atras en su browser.
-        return HttpResponseRedirect(reverse('results', args=(p.id, selected_choice.id,)))
+        #return HttpResponseRedirect(reverse('results', args=(p.id, selected_choice.id,)))
+        question = get_object_or_404(Question, pk=question_id)
+        choice = get_object_or_404(Choice, pk=selected_choice.id)
+        html = render_to_string('polls/results.html', {'title':'Resultados de la pregunta:','question': question, 'year':datetime.now().year, 'choice' : choice})
+        return HttpResponse(html)
+  #      return JsonResponse(
+   #             {
+    #                'content':{
+     #                       'url' : '/'+str(p.id)+'/'+str(selected_choice.id)+'/results'
+      #                  }
+       #             }
+        #    )
 
 def question_new(request):
         if request.method == "POST":
